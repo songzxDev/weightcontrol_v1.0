@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.szx.weightcontrol.dao.WProductMapper">
+	<resultMap id="BaseResultMap" type="cn.szx.weightcontrol.model.WProduct">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="user_id" property="userId" jdbcType="CHAR" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="purchase_amount" property="purchaseAmount" jdbcType="INTEGER" />
+		<result column="purchase_datatime" property="purchaseDatatime" jdbcType="TIMESTAMP" />
+		<result column="create_datetime" property="createDatetime" jdbcType="TIMESTAMP" />
+		<result column="modify_datetime" property="modifyDatetime" jdbcType="TIMESTAMP" />
+		<result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+		<result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+		<result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, product_name, purchase_amount, purchase_datatime, create_datetime, modify_datetime,
+		reserve1, reserve2, reserve3
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from w_product
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<!-- selectAllByUserId -->
+	<select id="selectAllByUserId" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from w_product
+		where user_id=#{userId,jdbcType=CHAR}
+		<if test="productStatus != null">
+			and reserve1=#{productStatus,jdbcType=VARCHAR}
+		</if>
+		order by create_datetime asc
+		limit #{page,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	</select>
+
+	<!-- sumPurchaseAmountByProductNameAndUserId -->
+	<select id="sumPurchaseAmountByProductNameAndUserId" resultType="long" parameterType="java.util.Map">
+		select
+		sum(purchase_amount)
+		from (SELECT * FROM w_product WHERE w_product.user_id = #{userId,jdbcType=CHAR} and w_product.reserve1=#{productStatus,jdbcType=VARCHAR}) as pro
+		where pro.product_name =#{productName,jdbcType=VARCHAR}
+	</select>
+
+	<!-- sumRemainingAmountsByProductNameAndUserId -->
+	<select id="sumRemainingAmountsByProductNameAndUserId" resultType="long" parameterType="java.util.Map">
+		select
+		sum(purchase_amount)
+		from (SELECT * FROM w_product WHERE w_product.user_id = #{userId,jdbcType=CHAR}) as pro
+		where pro.product_name =#{productName,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from w_product
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.szx.weightcontrol.model.WProduct">
+		insert into w_product (id, user_id, product_name,
+		purchase_amount, purchase_datatime, create_datetime,
+		modify_datetime, reserve1, reserve2,
+		reserve3)
+		values (#{id,jdbcType=CHAR}, #{userId,jdbcType=CHAR}, #{productName,jdbcType=VARCHAR},
+		#{purchaseAmount,jdbcType=INTEGER}, #{purchaseDatatime,jdbcType=TIMESTAMP}, #{createDatetime,jdbcType=TIMESTAMP},
+		#{modifyDatetime,jdbcType=TIMESTAMP}, #{reserve1,jdbcType=VARCHAR}, #{reserve2,jdbcType=VARCHAR},
+		#{reserve3,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.szx.weightcontrol.model.WProduct">
+		insert into w_product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="productName != null">
+				product_name,
+			</if>
+			<if test="purchaseAmount != null">
+				purchase_amount,
+			</if>
+			<if test="purchaseDatatime != null">
+				purchase_datatime,
+			</if>
+			<if test="createDatetime != null">
+				create_datetime,
+			</if>
+			<if test="modifyDatetime != null">
+				modify_datetime,
+			</if>
+			<if test="reserve1 != null">
+				reserve1,
+			</if>
+			<if test="reserve2 != null">
+				reserve2,
+			</if>
+			<if test="reserve3 != null">
+				reserve3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=CHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=CHAR},
+			</if>
+			<if test="productName != null">
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseAmount != null">
+				#{purchaseAmount,jdbcType=INTEGER},
+			</if>
+			<if test="purchaseDatatime != null">
+				#{purchaseDatatime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createDatetime != null">
+				#{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyDatetime != null">
+				#{modifyDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reserve1 != null">
+				#{reserve1,jdbcType=VARCHAR},
+			</if>
+			<if test="reserve2 != null">
+				#{reserve2,jdbcType=VARCHAR},
+			</if>
+			<if test="reserve3 != null">
+				#{reserve3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.szx.weightcontrol.model.WProduct">
+		update w_product
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=CHAR},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseAmount != null">
+				purchase_amount = #{purchaseAmount,jdbcType=INTEGER},
+			</if>
+			<if test="purchaseDatatime != null">
+				purchase_datatime = #{purchaseDatatime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createDatetime != null">
+				create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyDatetime != null">
+				modify_datetime = #{modifyDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reserve1 != null">
+				reserve1 = #{reserve1,jdbcType=VARCHAR},
+			</if>
+			<if test="reserve2 != null">
+				reserve2 = #{reserve2,jdbcType=VARCHAR},
+			</if>
+			<if test="reserve3 != null">
+				reserve3 = #{reserve3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.szx.weightcontrol.model.WProduct">
+		update w_product
+		set user_id = #{userId,jdbcType=CHAR},
+		product_name = #{productName,jdbcType=VARCHAR},
+		purchase_amount = #{purchaseAmount,jdbcType=INTEGER},
+		purchase_datatime = #{purchaseDatatime,jdbcType=TIMESTAMP},
+		create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+		modify_datetime = #{modifyDatetime,jdbcType=TIMESTAMP},
+		reserve1 = #{reserve1,jdbcType=VARCHAR},
+		reserve2 = #{reserve2,jdbcType=VARCHAR},
+		reserve3 = #{reserve3,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=CHAR}
+	</update>
+</mapper>

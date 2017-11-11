@@ -1,0 +1,7 @@
+cn.szx.weightcontrol.action
+cn.szx.weightcontrol.dao
+cn.szx.weightcontrol.model
+cn.szx.weightcontrol.pagemodel
+cn.szx.weightcontrol.service
+cn.szx.weightcontrol.service.impl
+cn.szx.weightcontrol.util

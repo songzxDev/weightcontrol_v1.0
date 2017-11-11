@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.szx.weightcontrol.dao.WMoneyIncomeExpenditureSubdivisionMapper">
+	<resultMap id="BaseResultMap" type="cn.szx.weightcontrol.model.WMoneyIncomeExpenditureSubdivision">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="subdivision_name" property="subdivisionName" jdbcType="VARCHAR" />
+		<result column="create_datetime" property="createDatetime" jdbcType="TIMESTAMP" />
+		<result column="modify_datetime" property="modifyDatetime" jdbcType="TIMESTAMP" />
+		<result column="category_id" property="categoryId" jdbcType="CHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, subdivision_name, create_datetime, modify_datetime, category_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from w_money_income_expenditure_subdivision
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<!-- selectAllSubdivisions -->
+	<select id="selectAllSubdivisions" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from w_money_income_expenditure_subdivision
+		where category_id = #{categoryId,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from w_money_income_expenditure_subdivision
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.szx.weightcontrol.model.WMoneyIncomeExpenditureSubdivision">
+		insert into w_money_income_expenditure_subdivision (id, subdivision_name, create_datetime,
+		modify_datetime, category_id)
+		values (#{id,jdbcType=CHAR}, #{subdivisionName,jdbcType=VARCHAR}, #{createDatetime,jdbcType=TIMESTAMP},
+		#{modifyDatetime,jdbcType=TIMESTAMP}, #{categoryId,jdbcType=CHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.szx.weightcontrol.model.WMoneyIncomeExpenditureSubdivision">
+		insert into w_money_income_expenditure_subdivision
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="subdivisionName != null">
+				subdivision_name,
+			</if>
+			<if test="createDatetime != null">
+				create_datetime,
+			</if>
+			<if test="modifyDatetime != null">
+				modify_datetime,
+			</if>
+			<if test="categoryId != null">
+				category_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=CHAR},
+			</if>
+			<if test="subdivisionName != null">
+				#{subdivisionName,jdbcType=VARCHAR},
+			</if>
+			<if test="createDatetime != null">
+				#{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyDatetime != null">
+				#{modifyDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="categoryId != null">
+				#{categoryId,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.szx.weightcontrol.model.WMoneyIncomeExpenditureSubdivision">
+		update w_money_income_expenditure_subdivision
+		<set>
+			<if test="subdivisionName != null">
+				subdivision_name = #{subdivisionName,jdbcType=VARCHAR},
+			</if>
+			<if test="createDatetime != null">
+				create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyDatetime != null">
+				modify_datetime = #{modifyDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="categoryId != null">
+				category_id = #{categoryId,jdbcType=CHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.szx.weightcontrol.model.WMoneyIncomeExpenditureSubdivision">
+		update w_money_income_expenditure_subdivision
+		set subdivision_name = #{subdivisionName,jdbcType=VARCHAR},
+		create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+		modify_datetime = #{modifyDatetime,jdbcType=TIMESTAMP},
+		category_id = #{categoryId,jdbcType=CHAR}
+		where id = #{id,jdbcType=CHAR}
+	</update>
+</mapper>
